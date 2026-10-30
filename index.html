@@ -104,6 +104,9 @@
                 <button @click="resetForm" class="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-2">
                     <i class="fa-solid fa-rotate-left"></i> 清空重填
                 </button>
+                <button @click="downloadOfflinePage" class="px-4 py-2 text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i> 下載離線版網頁
+                </button>
                 <button @click="triggerPrint" class="px-5 py-2.5 text-sm font-semibold text-white bg-ylblue-600 hover:bg-ylblue-700 rounded-lg shadow-sm transition-all flex items-center gap-2">
                     <i class="fa-solid fa-print"></i> 列印報支單與佐證 (A4)
                 </button>
@@ -1004,6 +1007,20 @@
                     window.print();
                 };
 
+                // 下載單檔離線版網頁
+                const downloadOfflinePage = () => {
+                    const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+                    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = '雲林縣國小差旅費計算系統_離線版.html';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                };
+
                 return {
                     schoolOptions,
                     commonDestinations,
@@ -1041,7 +1058,8 @@
                     currentFormattedDate,
                     formatNumber,
                     resetForm,
-                    triggerPrint
+                    triggerPrint,
+                    downloadOfflinePage
                 };
             }
         }).mount('#app');
